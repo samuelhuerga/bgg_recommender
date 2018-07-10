@@ -1,0 +1,30 @@
+
+.img-local {
+  position:relative;
+}
+
+.small-box{
+  height: 150px;
+}
+
+.small-box .img-local {
+  overflow: auto;
+  position: absolute;
+  margin-top:auto;
+  margin-bottom:auto;
+top: auto;
+bottom: 5px;
+top: 5px;
+right: 5px;
+z-index: 0;
+font-size: 70px;
+color: rgba(0, 0, 0, 0.15);
+opacity: 1;
+}
+
+
+.inner-text {
+position: relative;
+padding: 20px 0;
+margin-right: 75px;
+}
