@@ -1,0 +1,13 @@
+name: bgg_recommender
+title: bgg_recommender
+username:
+account: samuelhuerga
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 366352
+bundleId: 1446113
+url: https://samuelhuerga.shinyapps.io/bgg_recommender/
+when: 1529872310.93082
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|.RDataTmp|a.txt
