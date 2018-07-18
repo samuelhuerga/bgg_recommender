@@ -8,6 +8,7 @@ library(ShinyRatingInput)
 
 # load("data/data_v2.Rdata")
 load("models/ibcf.RData")
+rules_df <- readRDS("models/arules.RDS")
 games_id_n <- read_csv("tables/games_id_n.csv")
 source("override_valuebox.R")
 
@@ -27,4 +28,36 @@ recommend_ibcf <- function(table_preferences, n = 1000) {
   predictions <- recommenderlab::predict(rec_fit,game_ratings_matrix_user,n=9)
   predictions %>% as("list") %>% .[[1]]
   
+}
+
+# Function to recommend arules
+recommend_all_rules <- function(elements,n_output = 9, ignore_recommendations = c()){
+  elements <- sort(elements)
+  
+  if(length(elements) < 2){
+    elements_2 <- NULL
+    elements_3 <- NULL
+  } else if(length(elements) <3){
+    elements_2 <-  combn(elements,2,list)
+    elements_3 <- NULL
+  } else {
+    elements_2 <-  combn(elements,2,list)
+    elements_3 <-  combn(elements,3,list)
+    
+  }
+  
+  
+  lhs_df <- data_frame(lhs = c(elements, elements_2,elements_3))
+  
+  lhs_df %>% 
+    mutate(rhs = map(lhs,recommend_rules)) %>% 
+    select(-lhs) %>% 
+    unnest %>% 
+    filter(!(rhs %in% elements)) %>% 
+    arrange(-confidence) %>% 
+    select(rhs) %>% 
+    distinct() %>% 
+    filter(!(rhs %in% ignore_recommendations)) %>% 
+    slice(1:n_output) %>% 
+    pull
 }

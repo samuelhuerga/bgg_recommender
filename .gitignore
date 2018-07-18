@@ -3,3 +3,6 @@ images_resized/*
 images_thmb/*
 raw_data/*
 data/*
+.Rproj.user/
+www/images_thmb/
+tables/game_ratings_df_n.csv

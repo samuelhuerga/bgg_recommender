@@ -1,7 +1,10 @@
 
 shinyUI(dashboardPage(
   dashboardHeader(title = "BGG Recommender"),
-  dashboardSidebar(collapsed = T),
+  dashboardSidebar(p("Samuel Huerga"),
+                   HTML('<div itemscope itemtype="https://schema.org/Person"><a itemprop="sameAs" content="https://orcid.org/0000-0001-6149-4639" href="https://orcid.org/0000-0001-6149-4639" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">orcid.org/0000-0001-6149-4639</a></div>'),
+                   HTML('<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />'),
+                   collapsed = T),
   dashboardBody(
     sidebarLayout(
       sidebarPanel(

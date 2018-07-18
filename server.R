@@ -40,7 +40,18 @@ shinyServer(function(input, output,session) {
     
     l <- list()
     
-    recommendations <- data_frame(game_matrix_id = recommend_ibcf(rv$collection) %>% as.integer) %>% 
+    recommendations <- data_frame(game_matrix_id = recommend_ibcf(rv$collection) %>% as.integer)
+    
+    if(nrow(recommendations) < 9){
+    recommendations <- recommendations %>% 
+      bind_rows(
+      data_frame(game_matrix_id = recommend_all_rules(rv$collection %>% 
+                                                        filter(game_rating >=5) %>% 
+                                                        pull(game_id),
+                                                      n_output = 9 - nrow(recommendations),
+                                                      ignore_recommendations = recommendations %>% pull(game_matrix_id))))
+    } 
+    recommendations <- recommendations %>% 
       left_join(games_id_n)
     
     for (i in 1:nrow(recommendations)){

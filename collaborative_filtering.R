@@ -4,6 +4,8 @@ library(Matrix)
 # Prepare data for models
 games <- read_csv("tables/games.csv")
 games_id <- read_csv("tables/games_id.csv")
+load("data/data_v2.Rdata")
+load("data/game_ratings_df.Rdata")
 
 # For games reeditions, we consider only the highest ranked:
 games <- games %>% group_by(title) %>% filter(row_number() == 1) %>% ungroup
@@ -27,7 +29,8 @@ games_id_n <- games_id %>% filter(game_matrix_id <= n) %>% arrange(game_matrix_i
 game_ratings_df_n <- game_ratings_df %>% filter(game_matrix_id <= n)
 users_id_n <- users_id %>% semi_join(game_ratings_df_n %>% select(user_id))
 
-write_csv(games_id_n,"tables/games_id_n.csv")
+# write_csv(games_id_n,"tables/games_id_n.csv")
+# write_csv(game_ratings_df_n,"tables/game_ratings_df_n.csv")
 
 # game_ids <- games_id_n %>% pull(game_matrix_id)
 
@@ -43,9 +46,15 @@ game_ratings_matrix <- new("realRatingMatrix",data= game_ratings_sparse_matrix)
 
 # colnames(game_ratings_matrix) <-  games_id_n %>% pull(title)
 colnames(game_ratings_matrix) <-  games_id_n %>% pull(game_matrix_id)
-game_ratings_df %>% filter(user_id == 2)
 
-rec_fit <- Recommender(game_ratings_matrix[3:100000], method = "IBCF")
+rec_fit <- Recommender(game_ratings_matrix[1:100000], method = "IBCF"
+                       
+                       # param=list(normalize="Z-score", 
+                       #            method="pearson",
+                       #            nn=50,
+                       #            minRating=3,
+                       #            sample=F
+)
 
 dir_create("models")
 save(rec_fit, file="models/ibcf.RData")
