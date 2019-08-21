@@ -3,11 +3,7 @@ library(janitor)
 library(rvest)
 library(fs)
 
-game_html <- read_html("https://boardgamegeek.com/boardgame/205896/rising-sun/ratings")
-game_html <- read_html("https://boardgamegeek.com/boardgame/205896/rising-sun")
-game_html <- read_html("https://www.boardgamegeek.com/xmlapi2/boardgame?id=rising-su")
-
-
+# 0) Testing an URL
 xml <- read_xml("https://www.boardgamegeek.com/xmlapi2/thing?id=205896&ratingcomments=1&pagesize=100")
 
 xml %>% xml_nodes("comment") %>% xml_attrs()
@@ -45,7 +41,7 @@ dir_create("raw_data")
 dir_create("raw_data/games_id")
 
 games_id <- NULL
-for(title in (games %>% pull(title))[6265:10000]){
+for(title in (games %>% pull(title))){
   Sys.sleep(2)
   print(paste0(Sys.time(),": ",title))
   xml <- read_xml(paste0("https://www.boardgamegeek.com/xmlapi2/search?query=",
@@ -79,7 +75,7 @@ dir_create("raw_data/games_info")
 
 games_info <- NULL
 
-for(i in 4743:nrow(games_id)){
+for(i in 1:nrow(games_id)){
   Sys.sleep(2)
   title <- games_id %>% slice(i) %>% pull(title)
   game_id <- games_id %>% slice(i) %>% pull(game_id)
@@ -124,9 +120,11 @@ map2(games_images %>% pull(image_url),
 
 dir_create("images_resized")
 dir_create("images_thmb")
-library(magick)
 
-walk(Sys.glob("images/*")[713:5950],
+# Resizing Game Images
+# library(magick)
+
+walk(Sys.glob("images/*"),
      ~tryCatch(.x %>% image_read() %>% image_resize("x1000") %>% image_write(.x %>% str_replace("images","images_resized"),format = "jpg"),
      error=function(e){}))
 
@@ -144,7 +142,7 @@ games_id %>% count(game_id) %>% filter(n> 1)
 dir_create("raw_data/games_ratings/")
 file_create("raw_data/game_ratings_log.txt")
 
-for(dir_xml_game in Sys.glob("raw_data/games_info/*.xml")[4139:6247]){
+for(dir_xml_game in Sys.glob("raw_data/games_info/*.xml")){
   tryCatch({
     xml_game <- read_xml(dir_xml_game)
     game_id_i <-  xml_game %>% xml_node("item") %>%  xml_attr("id")
@@ -186,11 +184,9 @@ data_frame(id = xml %>% xml_node("item") %>%  xml_attr("id"),
            rating = xml %>% xml_child %>% xml_nodes("comments") %>% xml_children() %>% xml_attr("rating"),
            value = xml %>% xml_child %>% xml_nodes("comments") %>% xml_children() %>% xml_attr("value"))
 })
-Sys.time()
 
 # save(game_ratings,file = "data/game_ratings.Rdata")
 game_ratings_df <- game_ratings %>% reduce(bind_rows)
-Sys.time()
 
 # save(game_ratings_df,file = "game_ratings_df.Rdata")
 load("game_ratings_df.Rdata")

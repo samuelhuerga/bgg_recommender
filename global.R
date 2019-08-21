@@ -31,6 +31,11 @@ recommend_ibcf <- function(table_preferences, n = 1000) {
 }
 
 # Function to recommend arules
+recommend_rules <- function(elements){
+  rules_df %>% 
+    filter(lhs == paste0("{",str_c(elements,collapse = ","),"}"))
+}
+
 recommend_all_rules <- function(elements,n_output = 9, ignore_recommendations = c()){
   elements <- sort(elements)
   

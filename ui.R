@@ -1,15 +1,14 @@
 
 shinyUI(dashboardPage(
   dashboardHeader(title = "BGG Recommender"),
-  dashboardSidebar(p("Samuel Huerga"),
-                   HTML('<div itemscope itemtype="https://schema.org/Person"><a itemprop="sameAs" content="https://orcid.org/0000-0001-6149-4639" href="https://orcid.org/0000-0001-6149-4639" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">orcid.org/0000-0001-6149-4639</a></div>'),
+  dashboardSidebar(HTML('Samuel Huerga <a itemprop="sameAs" href="https://orcid.org/0000-0001-6149-4639" target="orcid.widget" rel="noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon"></a></br>'),
                    HTML('<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />'),
                    collapsed = T),
   dashboardBody(
     sidebarLayout(
       sidebarPanel(
         includeCSS("www/icons.css"),
-    selectizeInput('game_id', 'Games',
+    selectizeInput('game_id', 'Select games',
                    choices = setNames(games_id_n %>% 
                                         arrange(game_matrix_id)%>% 
                                         pull(game_id) ,
@@ -34,7 +33,7 @@ shinyUI(dashboardPage(
                    ))
     ,
     
-    ratingInput("rating", label="Rating: ", 
+    ratingInput("rating", label="Rate chosen games selecting stars: ", 
                 # class = "symbol",
                 dataFilled = "glyphicon glyphicon-heart",
                 dataEmpty = "glyphicon glyphicon-heart-empty",

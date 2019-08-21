@@ -19,7 +19,7 @@ shinyServer(function(input, output,session) {
   observeEvent(input$add_to_collection,{
     rv$collection <- bind_rows(isolate(rv$collection),
                                data_frame(game_id = isolate(games_id_n %>% 
-                                                              filter(game_id == input$game_id) %>% 
+                                                              filter(game_id %in% as.numeric(input$game_id)) %>% 
                                                               pull(game_matrix_id)),
                                           game_rating= as.numeric(input$rating)*2))
     updateSelectizeInput(session,"game_id",
